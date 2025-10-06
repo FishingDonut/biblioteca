@@ -9,6 +9,12 @@
 //bool - alugado (onde determinara se esta alugado ou nao)
 //string - data_alugel (dd/mm/YYYY) onde ira salvar quando foi alugado (livros so podem)
 
+
+//em vez de retornar void ira retornar o No ou as informacoes do livro
+void pesquisa(int matricula){
+
+}
+
 //possiveis atributo (matricula, autor, editora, assunto, alugado)
 template <typename T> void pesquisaLista(string atributo, T valor){
 
@@ -20,11 +26,13 @@ void listar(){
 }
 
 // recebe os artributos como parametro e adiciona na lista, gera a matricula
+//recebera: autor(string, fazer a busca do autor),editora(string, fazer a busca da editora),assunto,tipo,alugado(bool),editoras(auxiliar para busca),autores(auxiliar para busca)
+// validar os campos que tem que fazer busca, caso nao achar imprimir uma mensagem de erro e retornar false
 bool criar(){
 
 }
 
 // recebe a mtricula e os artributos como parametro busca o item e edita os dados
-bool editar(){
-
-}
+//recebera: autor(string, fazer a busca do autor),editora(string, fazer a busca da editora),assunto,tipo,editoras(auxiliar para busca),autores(auxiliar para busca)
+//caso algum campo venha vazio e pq nao quer ser editado
+//
