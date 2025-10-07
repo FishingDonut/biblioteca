@@ -1,7 +1,7 @@
 //deve conter uma lista hashing, com uma lista duplamente encadeada de usuario
 //atributos:
 //int - matricula sera usado para determinar a posiçao dele na fila (nao no hashing)
-//int - livro alugado (matricula do livro, padrao 0 pois nao existe matricula 0)
+//int - livro_alugado (matricula do livro, padrao 0 pois nao existe matricula 0)
 //string - data_alugel (dd/mm/YYYY) onde ira salvar quando foi alugado (livros so podem)
 //string - nome, nome do usuario 
 
@@ -16,11 +16,13 @@ void listar(){
 }
 
 // recebe os artributos como parametro e adiciona na lista, gera a matricula
+// atributos: nome, livro_alugado, data_alugel
 bool criar(){
 
 }
 
 // recebe a mtricula e os artributos como parametro busca o item e edita os dados
+// atributos: matricula, nome, livro_alugado, data_alugel
 bool editar(){
 
 }

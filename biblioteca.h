@@ -101,11 +101,13 @@ bool libs(){
     // Livros livros;
     // Editoras editoras;
     // Autores autores;
+    // Historicos historicos;
     
     // usuarios.inicializar();
     // livros.inicializar();
     // editoras.inicializar();
     // autores.inicializar();
+    // historicos.inicializar();
 
     string txtAutor = "Informe o nome do autor:";
     string txtEditora = "Informe o nome da editora:";
@@ -126,7 +128,7 @@ bool libs(){
             case 1:
                 //LPCE
                 do{
-                    opcoesInter = ImprimeRetorna<int>("Selecione oque deseja interagir: \n 1 • Listar \n 2 • Pesquisar \n 3 • Criar \n 4 • Editar \n 5 • Aluguel/Devolução \n 6• Voltar");
+                    opcoesInter = ImprimeRetorna<int>("Selecione oque deseja interagir: \n 1 • Listar \n 2 • Pesquisar \n 3 • Criar \n 4 • Editar \n 5 • Aluguel/Devolução\n 6 • Historico \n 7• Voltar");
                     switch (opcoesInter){
                         //Listar
                         case 1:
@@ -187,25 +189,36 @@ bool libs(){
                             matricula = ImprimeRetornaMatricula("Digite a matricula do usuario que ira alugar o livro:");
                             // usuarios.pesquisaLista("matricula",matricula);
                             // if(usuario.livro_alugado){
+                                //historicos.criar(usuario.livro_alugado,matricula,false,"")
                                 // livros.editar(usuario.livro_alugado,"","","","",false,editoras,autores);
                                 // usuarios.editar(matricula,"",NULL,NULL);
+                                // 
                             // }else{
                                 //matricula2 = ImprimeRetornaMatricula("Digite a matricula do livro que sera alugado:");
                                 //livros.pesquisaLista("matricula",matricula2);
                                 //livros.editar(matricula2,"","","","",true,editoras,autores);
                                 //usuarios.editar(matricula,"",matricula2,obterDataFormatada());
+                                //historicos.criar(matricula2,matricula,true,obterDataFormatada())
                             //}
+                        break;
+                        case 6:
+                            // historicos.pesquisaLista("livro",livros.pesquisaLista("matricula",ImprimeRetornaMatricula()));
+                            cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
+                            cin.ignore();
+                            cout<< cin.get();
+                            cout<<"\033c";
+                            opcoesInter = 0;
                         break;
                         default:
                             cout << "Você ira retornar para o menu de gerenciar, precisone qualquer tecla para prosseguir:\n";
                             cin.ignore();
                             cout<< cin.get();
                             cout<<"\033c";
-                            opcoesInter = 5;
+                            opcoesInter = 7;
                             opcoesLib = 0;
                         break;
                     }
-                } while (opcoesInter != 5);
+                } while (opcoesInter != 7);
             break;
             //Autores
             case 2:
@@ -323,5 +336,95 @@ bool libs(){
             //Usuarios
             case 4:
                 do{
-                    opcoesInter = ImprimeRetorna<int>("Selecione oque deseja interagir: \n 1 • Listar \n 2 • Pesquisar \n 3 • Criar \n 4 • Editar \n 5 • Aluguel/Devolução \n 6• Voltar");
-                    
+                    opcoesInter = ImprimeRetorna<int>("Selecione oque deseja interagir: \n 1 • Listar \n 2 • Pesquisar \n 3 • Criar \n 4 • Editar \n 5 • Aluguel/Devolução \n 6 • Historico \n 7• Voltar");
+                    switch (opcoesInter){
+                        //Listar
+                        case 1:
+                            // if(usuarios.listar()){
+                                cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
+                                cin.ignore();
+                                cout<< cin.get();
+                                cout<<"\033c";
+                                opcoesInter = 0;
+                            // }
+                        break;
+                        //Pesquisar
+                        case 2:
+                            /* Pesquisa de Usuarios*/
+                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Livro alugado \n 3 • Nome");
+                            switch (pesquisa){
+                                case 1:
+                                    // usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula());
+                                break;
+                                case 2:
+                                    // usuarios.pesquisaLista("livro_alugado",ImprimeRetornaMatricula("Digite a matricula do livro alugado que deseja pesquisar: "));
+                                break;
+                                default:
+                                    // usuarios.pesquisaLista("nome",ImprimeRetorna<string>("Digite o nome:"));
+                                break;
+                            }
+                            cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
+                            cin.ignore();
+                            cout<< cin.get();
+                            cout<<"\033c";
+                            opcoesInter = 0;
+                        break;
+                        //Criar
+                        case 3:
+                            nome = ImprimeRetorna<string>(txtNome);
+                            //usuarios.criar(nome);
+                        break;
+                        //Editar
+                        case 4:
+                            matricula = ImprimeRetornaMatricula("Digite a matricula do item que deseja editar, caso não queira editar um campo deixe vazio:");
+                            nome = ImprimeRetorna<string>(txtNome);
+                            //usuarios.editar(matricula,nome);
+                        break;
+                        //Aluguel/Devolução
+                        case 5:
+                            matricula = ImprimeRetornaMatricula("Digite a matricula do usuario que ira alugar ou devolver um livro:");
+                            // usuarios.pesquisaLista("matricula",matricula);
+                            // if(usuario.livro_alugado){
+                                //historicos.criar(usuario.livro_alugado,matricula,false,"")
+                                // livros.editar(usuario.livro_alugado,"","","","",false,editoras,autores);
+                                // usuarios.editar(matricula,"",NULL,NULL);
+                            // }else{
+                                //matricula2 = ImprimeRetornaMatricula("Digite a matricula do livro que sera alugado:");
+                                //livros.pesquisaLista("matricula",matricula2);
+                                //livros.editar(matricula2,"","","","",true,editoras,autores);
+                                //usuarios.editar(matricula,"",matricula2,obterDataFormatada());
+                                //historicos.criar(matricula2,matricula,true,obterDataFormatada())
+                            //}
+                        break;
+                        case 6:
+                            // historicos.pesquisaLista("usuario",usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula()));
+                            cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
+                            cin.ignore();
+                            cout<< cin.get();
+                            cout<<"\033c";
+                            opcoesInter = 0;
+                        break;
+                        default:
+                            cout << "Você ira retornar para o menu de gerenciar, precisone qualquer tecla para prosseguir:\n";
+                            cin.ignore();
+                            cout<< cin.get();
+                            cout<<"\033c";
+                            opcoesInter = 7;
+                            opcoesLib = 0;
+                        break;
+                    }
+                } while (opcoesInter != 7);
+            break;
+            default:
+                opcoesLib = ImprimeRetorna<int>("Você ira voltar ao menu inicial, todos os dados serão perdidos digite 1 se realmente deseja continuar:");
+                if(opcoesLib == 1){
+                    opcoesLib = 5;
+                }else{
+                    opcoesLib = 0;
+                }
+            break;
+        }
+    } while (opcoesLib != 5);
+    
+    return true;
+}
