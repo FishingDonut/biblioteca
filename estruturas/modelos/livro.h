@@ -2,7 +2,7 @@
 #include "autor.h"
 #include <iostream>
 
-struct livros
+struct Livro
 {
     int matricula = 0;
     int matriculaAutor = 0;

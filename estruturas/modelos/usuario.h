@@ -3,9 +3,9 @@
 #include "no.h"
 #include <string>
 
-struct usuario
+struct Usuario
 {
     int matricula = 0;
     std::string nome = "";
-    No<historico> historicoMatriculasLivros; 
+    No<Historico> historicoMatriculasLivros; 
 };

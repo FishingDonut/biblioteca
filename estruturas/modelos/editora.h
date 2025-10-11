@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-struct editora
+struct Editora
 {
     int matricula = 0;
     std::string nome = "";

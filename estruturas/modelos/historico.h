@@ -6,7 +6,7 @@ enum Status{
     Entrega
 };
 
-struct historico
+struct Historico
 {
     int matriculaUsuario = 0;
     time_t horario;
