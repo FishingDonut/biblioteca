@@ -7,7 +7,7 @@ struct autor
     std::string nome = "";
 };
 
-inline std::ostream& operator<<(std::ostream& os, const autor& a){
-    os << a.nome;
-    return os;
-} 
+// inline std::ostream& operator<<(std::ostream& os, const autor& a){
+//     os << a.nome;
+//     return os;
+// } 

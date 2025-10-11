@@ -5,10 +5,18 @@
 struct livros
 {
     int matricula = 0;
-    std::string nome; 
+    int matriculaAutor = 0;
+    int matriculaEditora = 0;
+    int matriculaUsuario = 0;
+    std::string titulo = ""; 
+    std::string assunto = ""; 
+    bool ocupado = false;
+    time_t dataDevolucao;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const livros& b){
-    os << b.nome;
-    return os;
-} 
+
+
+// inline std::ostream& operator<<(std::ostream& os, const livros& b){
+//     os << b.nome;
+//     return os;
+// } 
