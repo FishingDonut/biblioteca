@@ -9,6 +9,7 @@
 #include "models/historicos.h"
 #include "models/livros.h"
 #include "models/usuarios.h"
+#include "models/revistas.h"
 
 void testAutores() {
     std::cout << "\n--- Testando Autores ---\n";
@@ -57,12 +58,23 @@ void testLivros() {
 void testUsuarios() {
     std::cout << "\n--- Testando Usuarios ---\n";
     Usuarios usuarios;
-    usuarios.criar(0, "", "Daniel");
-    Usuario usuarioParaEditar = usuarios.criar(102, "10/10/2025", "Julina");
+    usuarios.criar("Daniel");
+    Usuario usuarioParaEditar = usuarios.criar("Julina");
     usuarios.listar();
     std::cout << "\n--- Editando Usuario ---\n";
-    usuarios.editar(usuarioParaEditar.matricula, 102, "10/10/2025", "Juliana");
+    usuarios.editar(usuarioParaEditar.matricula, "Juliana");
     usuarios.listar();
+}
+
+void testRevistas() {
+    std::cout << "\n--- Testando Revistas ---\n";
+    Revistas revistas;
+    revistas.criar(1, "Ciencia", "Revista", false, "");
+    Revista revistaParaEditar = revistas.criar(2, "Tecnologia", "Revista", true, "10/10/2025");
+    revistas.listar();
+    std::cout << "\n--- Editando Revista ---\n";
+    revistas.editar(revistaParaEditar.matricula, 2, "Business", "Revista", false, "");
+    revistas.listar();
 }
 
 int main() {
@@ -73,6 +85,7 @@ int main() {
     testHistoricos();
     testLivros();
     testUsuarios();
+    testRevistas();
 
     return 0;
 }

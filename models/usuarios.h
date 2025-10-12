@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include "historicos.h"
 
 #ifndef TAMANHO_HASH_USUARIO
 #define TAMANHO_HASH_USUARIO 7
@@ -13,9 +14,8 @@
 struct Usuario
 {
     int matricula;
-    int livro_alugado;
-    std::string data_alugel;
     std::string nome;
+    ListaHistorico historico;
 };
 
 struct NoUsuario {
@@ -98,10 +98,8 @@ struct Usuarios
         return std::abs(hash % TAMANHO_HASH_USUARIO);
     }
 
-    Usuario criar(int livro_alugado, std::string data_alugel, std::string nome) {
+    Usuario criar(std::string nome) {
         Usuario novoUsuario;
-        novoUsuario.livro_alugado = livro_alugado;
-        novoUsuario.data_alugel = data_alugel;
         novoUsuario.nome = nome;
         novoUsuario.matricula = rand() % 100000;
 
@@ -120,15 +118,13 @@ struct Usuarios
         std::cout << "===============================\n";
     }
 
-    bool editar(int matricula, int novo_livro_alugado, std::string nova_data_alugel, std::string novo_nome) {
+    bool editar(int matricula, std::string novo_nome) {
         for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
             NoUsuario* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Usuario usuarioParaAtualizar = no->valor;
                 tabela[i].remover(matricula);
 
-                usuarioParaAtualizar.livro_alugado = novo_livro_alugado;
-                usuarioParaAtualizar.data_alugel = nova_data_alugel;
                 usuarioParaAtualizar.nome = novo_nome;
                 
                 int novoIndice = funcaoHash(usuarioParaAtualizar.nome);
