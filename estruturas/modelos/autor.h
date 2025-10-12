@@ -1,13 +1,15 @@
 #pragma once
 #include <string>
+#include <random>
+#include <ostream>
 
 struct Autor
 {
-    int matricula = 0;
+    int matricula = rand() % 100000;
     std::string nome = "";
 };
 
-// inline std::ostream& operator<<(std::ostream& os, const autor& a){
-//     os << a.nome;
-//     return os;
-// } 
+inline std::ostream& operator<<(std::ostream& os, const Autor& a){
+    os << a.matricula;
+    return os;
+} 

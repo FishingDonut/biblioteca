@@ -1,10 +1,13 @@
 #pragma once
 #include "autor.h"
 #include <iostream>
+#include <string>
+#include <random>
+#include <ostream>
 
 struct Livro
 {
-    int matricula = 0;
+    int matricula = rand() % 100000;
     int matriculaAutor = 0;
     int matriculaEditora = 0;
     int matriculaUsuario = 0;
@@ -14,9 +17,7 @@ struct Livro
     time_t dataDevolucao;
 };
 
-
-
-// inline std::ostream& operator<<(std::ostream& os, const livros& b){
-//     os << b.nome;
-//     return os;
-// } 
+inline std::ostream& operator<<(std::ostream& os, const Livro& l){
+    os << l.titulo;
+    return os;
+}
