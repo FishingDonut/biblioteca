@@ -50,6 +50,40 @@ struct ListaHistorico {
             auxiliar = auxiliar->proximo;
         }
     }
+
+    NoHistorico* buscar(int matricula) {
+        NoHistorico *auxiliar = inicio;
+        while (auxiliar != nullptr) {
+            if (auxiliar->valor.matricula == matricula) {
+                return auxiliar;
+            }
+            auxiliar = auxiliar->proximo;
+        }
+        return nullptr;
+    }
+
+    bool remover(int matricula) {
+        NoHistorico* noParaRemover = buscar(matricula);
+        if (noParaRemover == nullptr) {
+            return false;
+        }
+
+        if (noParaRemover == inicio) {
+            inicio = noParaRemover->proximo;
+        }
+        if (noParaRemover == fim) {
+            fim = noParaRemover->anterior;
+        }
+        if (noParaRemover->proximo != nullptr) {
+            noParaRemover->proximo->anterior = noParaRemover->anterior;
+        }
+        if (noParaRemover->anterior != nullptr) {
+            noParaRemover->anterior->proximo = noParaRemover->proximo;
+        }
+
+        delete noParaRemover;
+        return true;
+    }
 };
 
 struct Historicos
@@ -61,7 +95,7 @@ struct Historicos
         return std::abs(usuario % TAMANHO_HASH_HISTORICO);
     }
 
-    bool criar(int livro, int usuario, bool alugado, std::string data_alugel) {
+    Historico criar(int livro, int usuario, bool alugado, std::string data_alugel) {
         Historico novoHistorico;
         novoHistorico.livro = livro;
         novoHistorico.usuario = usuario;
@@ -71,7 +105,7 @@ struct Historicos
 
         int indice = funcaoHash(novoHistorico.usuario);
         tabela[indice].adicionar(novoHistorico);
-        return true;
+        return novoHistorico;
     }
 
     void listar() {
@@ -84,7 +118,23 @@ struct Historicos
         std::cout << "=================================\n";
     }
 
-    bool editar(int matricula, int livro, int usuario, bool alugado, std::string data_alugel) {
+    bool editar(int matricula, int novoLivro, int novoUsuario, bool novoAlugado, std::string novaData) {
+        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+            NoHistorico* no = tabela[i].buscar(matricula);
+            if (no != nullptr) {
+                Historico historicoParaAtualizar = no->valor;
+                tabela[i].remover(matricula);
+
+                historicoParaAtualizar.livro = novoLivro;
+                historicoParaAtualizar.usuario = novoUsuario;
+                historicoParaAtualizar.alugado = novoAlugado;
+                historicoParaAtualizar.data_alugel = novaData;
+                
+                int novoIndice = funcaoHash(historicoParaAtualizar.usuario);
+                tabela[novoIndice].adicionar(historicoParaAtualizar);
+                return true;
+            }
+        }
         return false;
     }
 };

@@ -47,6 +47,40 @@ struct ListaAutor {
             auxiliar = auxiliar->proximo;
         }
     }
+    
+    NoAutor* buscar(int matricula) {
+        NoAutor *auxiliar = inicio;
+        while (auxiliar != nullptr) {
+            if (auxiliar->valor.matricula == matricula) {
+                return auxiliar;
+            }
+            auxiliar = auxiliar->proximo;
+        }
+        return nullptr;
+    }
+
+    bool remover(int matricula) {
+        NoAutor* noParaRemover = buscar(matricula);
+        if (noParaRemover == nullptr) {
+            return false;
+        }
+
+        if (noParaRemover == inicio) {
+            inicio = noParaRemover->proximo;
+        }
+        if (noParaRemover == fim) {
+            fim = noParaRemover->anterior;
+        }
+        if (noParaRemover->proximo != nullptr) {
+            noParaRemover->proximo->anterior = noParaRemover->anterior;
+        }
+        if (noParaRemover->anterior != nullptr) {
+            noParaRemover->anterior->proximo = noParaRemover->proximo;
+        }
+
+        delete noParaRemover;
+        return true;
+    }
 };
 
 struct Autores
@@ -62,14 +96,14 @@ struct Autores
         return std::abs(hash % TAMANHO_HASH_AUTOR);
     }
 
-    bool criar(std::string nome) {
+    Autor criar(std::string nome) {
         Autor novoAutor;
         novoAutor.nome = nome;
         novoAutor.matricula = rand() % 100000;
 
         int indice = funcaoHash(novoAutor.nome);
         tabela[indice].adicionar(novoAutor);
-        return true;
+        return novoAutor;
     }
 
     void listar() {
@@ -82,7 +116,20 @@ struct Autores
         std::cout << "==============================\n";
     }
 
-    bool editar(int matricula, std::string nome) {
+    bool editar(int matricula, std::string novoNome) {
+        for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
+            NoAutor* no = tabela[i].buscar(matricula);
+            if (no != nullptr) {
+                Autor autorParaAtualizar = no->valor;
+                tabela[i].remover(matricula);
+
+                autorParaAtualizar.nome = novoNome;
+                
+                int novoIndice = funcaoHash(autorParaAtualizar.nome);
+                tabela[novoIndice].adicionar(autorParaAtualizar);
+                return true;
+            }
+        }
         return false;
     }
 };

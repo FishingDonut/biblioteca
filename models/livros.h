@@ -52,6 +52,40 @@ struct ListaLivro {
             auxiliar = auxiliar->proximo;
         }
     }
+
+    NoLivro* buscar(int matricula) {
+        NoLivro *auxiliar = inicio;
+        while (auxiliar != nullptr) {
+            if (auxiliar->valor.matricula == matricula) {
+                return auxiliar;
+            }
+            auxiliar = auxiliar->proximo;
+        }
+        return nullptr;
+    }
+
+    bool remover(int matricula) {
+        NoLivro* noParaRemover = buscar(matricula);
+        if (noParaRemover == nullptr) {
+            return false;
+        }
+
+        if (noParaRemover == inicio) {
+            inicio = noParaRemover->proximo;
+        }
+        if (noParaRemover == fim) {
+            fim = noParaRemover->anterior;
+        }
+        if (noParaRemover->proximo != nullptr) {
+            noParaRemover->proximo->anterior = noParaRemover->anterior;
+        }
+        if (noParaRemover->anterior != nullptr) {
+            noParaRemover->anterior->proximo = noParaRemover->proximo;
+        }
+
+        delete noParaRemover;
+        return true;
+    }
 };
 
 struct Livros
@@ -67,7 +101,7 @@ struct Livros
         return std::abs(hash % TAMANHO_HASH_LIVRO);
     }
 
-    bool criar(int autor, int editora, std::string assunto, std::string tipo, bool alugado, std::string data_alugel) {
+    Livro criar(int autor, int editora, std::string assunto, std::string tipo, bool alugado, std::string data_alugel) {
         Livro novoLivro;
         novoLivro.autor = autor;
         novoLivro.editora = editora;
@@ -79,7 +113,7 @@ struct Livros
 
         int indice = funcaoHash(novoLivro.assunto);
         tabela[indice].adicionar(novoLivro);
-        return true;
+        return novoLivro;
     }
 
     void listar() {
@@ -92,7 +126,25 @@ struct Livros
         std::cout << "=============================\n";
     }
 
-    bool editar(int matricula, int autor, int editora, std::string assunto, std::string tipo, bool alugado, std::string data_alugel) {
+    bool editar(int matricula, int novoAutor, int novaEditora, std::string novoAssunto, std::string novoTipo, bool novoAlugado, std::string novaData) {
+        for (int i = 0; i < TAMANHO_HASH_LIVRO; i++) {
+            NoLivro* no = tabela[i].buscar(matricula);
+            if (no != nullptr) {
+                Livro livroParaAtualizar = no->valor;
+                tabela[i].remover(matricula);
+
+                livroParaAtualizar.autor = novoAutor;
+                livroParaAtualizar.editora = novaEditora;
+                livroParaAtualizar.assunto = novoAssunto;
+                livroParaAtualizar.tipo = novoTipo;
+                livroParaAtualizar.alugado = novoAlugado;
+                livroParaAtualizar.data_alugel = novaData;
+                
+                int novoIndice = funcaoHash(livroParaAtualizar.assunto);
+                tabela[novoIndice].adicionar(livroParaAtualizar);
+                return true;
+            }
+        }
         return false;
     }
 };
