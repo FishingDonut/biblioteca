@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <limits>
 using namespace std;
 #include "models/autores.h"
 #include "models/editoras.h"
@@ -43,7 +44,7 @@ int ImprimeRetornaMatricula(string texto = "Digite o valor da matricula:"){
         if(maricula <= 0 || maricula > 99999){
             cout << "Valor digitado invalido para matricula, digite novamente \n";
         }
-    } while (maricula >= 0 && maricula <= 99999);
+    } while (maricula <= 0 || maricula > 99999);
     
     return maricula;
 }
@@ -97,12 +98,18 @@ void mostrarInformacoes() {
 bool libs(){
     int opcoesLib = 0;
     int opcoesInter = 0;
-    // Usuarios usuarios;
-    // Livros livros;
-    // Editoras editoras;
-    // Autores autores;
-    // Historicos historicos;
+    Usuarios usuarios;
+    Livros livros;
+    Editoras editoras;
+    Autores autores;
+    Historicos historicos;
     
+    Usuario usuario;
+    Livro livro;
+    Editora editora;
+    Autor autor;
+    Historico historico;
+
     // usuarios.inicializar();
     // livros.inicializar();
     // editoras.inicializar();
@@ -114,12 +121,14 @@ bool libs(){
     string txtAssunto = "Informe o assunto:";
     string txtTipo = "Informe o tipo (Livro - 1, Revista - 2):";
     string txtNome = "Informe o nome:";
-    string autor;
-    string editora;
+    string autorSt;
+    string editoraSt;
     string assunto;
     string nome;
     int matricula;
     int matricula2;
+    int pesquisa;
+    int tipo;
 
     do{
         opcoesLib = ImprimeRetorna<int>("Selecione oque deseja gerenciar: \n 1 • Livros/Revistas \n 2 • Autores \n 3 • Editora \n 4 • Usuarios \n 5 • Voltar");
@@ -132,18 +141,18 @@ bool libs(){
                     switch (opcoesInter){
                         //Listar
                         case 1:
-                            // if(livros.listar()){
+                            if(livros.listar()){
                                 cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
                                 cin.ignore();
                                 cout<< cin.get();
                                 cout<<"\033c";
                                 opcoesInter = 0;
-                            // }
+                            }
                         break;
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Autores*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Autor \n 3 • Editora \n 4 • Assunto \n 5 • Alugado");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Autor \n 3 • Editora \n 4 • Assunto \n 5 • Alugado");
                             switch (pesquisa){
                                 case 1:
                                     // livros.pesquisaLista("matricula",ImprimeRetornaMatricula());
@@ -169,37 +178,35 @@ bool libs(){
                         break;
                         //Criar
                         case 3:
-                            autor = ImprimeRetorna<string>(txtAutor);
-                            editora = ImprimeRetorna<string>(txtEditora);
+                            autorSt =  ImprimeRetorna<string>(txtAutor);
+                            editoraSt =  ImprimeRetorna<string>(txtEditora);
                             assunto = ImprimeRetorna<string>(txtAssunto);
-                            int tipo = ImprimeRetorna<int>(txtTipo);
-                            //livros.criar(autor,editora,assunto,tipo,editoras,autores);
+                            tipo = ImprimeRetorna<int>(txtTipo);
+                            livros.criar(autores.pesquisar("nome",string(autorSt)).matricula,editoras.pesquisar("nome",string(editoraSt)).matricula,assunto,tipo,false,"");
                         break;
                         //Editar
                         case 4:
                             matricula = ImprimeRetornaMatricula("Digite a matricula do item que deseja editar, caso não queira editar um campo deixe vazio:");
-                            autor = ImprimeRetorna<string>(txtAutor);
-                            editora = ImprimeRetorna<string>(txtEditora);
+                            autorSt =  ImprimeRetorna<string>(txtAutor);
+                            editoraSt =  ImprimeRetorna<string>(txtEditora);
                             assunto = ImprimeRetorna<string>(txtAssunto);
-                            int tipo = ImprimeRetorna<int>(txtTipo);
-                            //livros.editar(matricula,autor,editora,assunto,tipo,editoras,autores);
+                            tipo = ImprimeRetorna<int>(txtTipo);
+                            livros.editar(matricula,autores.pesquisar("nome",string(autorSt)).matricula,editoras.pesquisar("nome",string(editoraSt)).matricula,assunto,tipo,false,"");
                         break;
                         //Aluguel/Devolução
                         case 5:
-                            matricula = ImprimeRetornaMatricula("Digite a matricula do usuario que ira alugar o livro:");
-                            // usuarios.pesquisaLista("matricula",matricula);
-                            // if(usuario.livro_alugado){
-                                //historicos.criar(usuario.livro_alugado,matricula,false,"")
-                                // livros.editar(usuario.livro_alugado,"","","","",false,editoras,autores);
-                                // usuarios.editar(matricula,"",NULL,NULL);
-                                // 
-                            // }else{
-                                //matricula2 = ImprimeRetornaMatricula("Digite a matricula do livro que sera alugado:");
-                                //livros.pesquisaLista("matricula",matricula2);
-                                //livros.editar(matricula2,"","","","",true,editoras,autores);
-                                //usuarios.editar(matricula,"",matricula2,obterDataFormatada());
-                                //historicos.criar(matricula2,matricula,true,obterDataFormatada())
-                            //}
+                            usuario = usuarios.pesquisar("matricula",ImprimeRetornaMatricula("Digite a matricula do usuario que ira alugar o livro:"));
+                            if(usuario.livro_alugado){
+                                historicos.criar(usuario.livro_alugado,usuario.matricula,false,"");
+                                livros.editar(usuario.livro_alugado,0,0,"",0,false,"");
+                                usuarios.editar(usuario.matricula,"",-1);
+                            }else{
+                                matricula2 = ImprimeRetornaMatricula("Digite a matricula do livro que sera alugado:");
+                                livro = livros.pesquisar("matricula",matricula2);
+                                livros.editar(matricula2,0,0,"",0,false,"");
+                                usuarios.editar(usuario.matricula,"",matricula2);
+                                historicos.criar(matricula2,usuario.matricula,true,obterDataFormatada());
+                            }
                         break;
                         case 6:
                             // historicos.pesquisaLista("livro",livros.pesquisaLista("matricula",ImprimeRetornaMatricula()));
@@ -229,18 +236,18 @@ bool libs(){
                         //Listar
                         case 1:
                             /* Listagem de Autores*/
-                            // if(autores.listar()){
+                            if(autores.listar()){
                                 cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
                                 cin.ignore();
                                 cout<< cin.get();
                                 cout<<"\033c";
                                 opcoesInter = 0;
-                            // }
+                            }
                         break;
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Autores*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
                             switch (pesquisa){
                                 case 1:
                                     // autores.pesquisaLista("matricula",ImprimeRetornaMatricula());
@@ -265,7 +272,7 @@ bool libs(){
                         case 4:
                             matricula = ImprimeRetornaMatricula("Digite a matricula do item que deseja editar, caso não queira editar um campo deixe vazio:");
                             nome = ImprimeRetorna<string>(txtNome);
-                            //autores.editar(matricula,nome);
+                            autores.editar(matricula,nome);
                         break;
                         default:
                             cout << "Você ira retornar para o menu de gerenciar, precisone qualquer tecla para prosseguir:\n";
@@ -285,18 +292,18 @@ bool libs(){
                     switch (opcoesInter){
                         //Listar
                         case 1:
-                            // if(editoras.listar()){
+                            if(editoras.listar()){
                                 cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
                                 cin.ignore();
                                 cout<< cin.get();
                                 cout<<"\033c";
                                 opcoesInter = 0;
-                            // }
+                            }
                         break;
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Autores*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
                             switch (pesquisa){
                                 case 1:
                                     // editoras.pesquisaLista("matricula",ImprimeRetornaMatricula());
@@ -314,13 +321,13 @@ bool libs(){
                         //Criar
                         case 3:
                             nome = ImprimeRetorna<string>(txtNome);
-                            //editoras.criar(nome);
+                            editoras.criar(nome);
                         break;
                         //Editar
                         case 4:
                             matricula = ImprimeRetornaMatricula("Digite a matricula do item que deseja editar, caso não queira editar um campo deixe vazio:");
                             nome = ImprimeRetorna<string>(txtNome);
-                            //editoras.editar(matricula,nome);
+                            editoras.editar(matricula,nome);
                         break;
                         default:
                             cout << "Você ira retornar para o menu de gerenciar, precisone qualquer tecla para prosseguir:\n";
@@ -340,18 +347,18 @@ bool libs(){
                     switch (opcoesInter){
                         //Listar
                         case 1:
-                            // if(usuarios.listar()){
+                            if(usuarios.listar()){
                                 cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
                                 cin.ignore();
                                 cout<< cin.get();
                                 cout<<"\033c";
                                 opcoesInter = 0;
-                            // }
+                            }
                         break;
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Usuarios*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Livro alugado \n 3 • Nome");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Livro alugado \n 3 • Nome");
                             switch (pesquisa){
                                 case 1:
                                     // usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula());
@@ -372,29 +379,28 @@ bool libs(){
                         //Criar
                         case 3:
                             nome = ImprimeRetorna<string>(txtNome);
-                            //usuarios.criar(nome);
+                            usuarios.criar(nome);
                         break;
                         //Editar
                         case 4:
                             matricula = ImprimeRetornaMatricula("Digite a matricula do item que deseja editar, caso não queira editar um campo deixe vazio:");
                             nome = ImprimeRetorna<string>(txtNome);
-                            //usuarios.editar(matricula,nome);
+                            usuarios.editar(matricula,nome,0);
                         break;
                         //Aluguel/Devolução
                         case 5:
-                            matricula = ImprimeRetornaMatricula("Digite a matricula do usuario que ira alugar ou devolver um livro:");
-                            // usuarios.pesquisaLista("matricula",matricula);
-                            // if(usuario.livro_alugado){
-                                //historicos.criar(usuario.livro_alugado,matricula,false,"")
-                                // livros.editar(usuario.livro_alugado,"","","","",false,editoras,autores);
-                                // usuarios.editar(matricula,"",NULL,NULL);
-                            // }else{
-                                //matricula2 = ImprimeRetornaMatricula("Digite a matricula do livro que sera alugado:");
-                                //livros.pesquisaLista("matricula",matricula2);
-                                //livros.editar(matricula2,"","","","",true,editoras,autores);
-                                //usuarios.editar(matricula,"",matricula2,obterDataFormatada());
-                                //historicos.criar(matricula2,matricula,true,obterDataFormatada())
-                            //}
+                            usuario = usuarios.pesquisar("matricula",ImprimeRetornaMatricula("Digite a matricula do usuario que ira alugar o livro:"));
+                            if(usuario.livro_alugado){
+                                historicos.criar(usuario.livro_alugado,usuario.matricula,false,"");
+                                livros.editar(usuario.livro_alugado,0,0,"",0,false,"");
+                                usuarios.editar(usuario.matricula,"",-1);
+                            }else{
+                                matricula2 = ImprimeRetornaMatricula("Digite a matricula do livro que sera alugado:");
+                                livro = livros.pesquisar("matricula",matricula2);
+                                livros.editar(matricula2,0,0,"",0,false,"");
+                                usuarios.editar(usuario.matricula,"",matricula2);
+                                historicos.criar(matricula2,usuario.matricula,true,obterDataFormatada());
+                            }
                         break;
                         case 6:
                             // historicos.pesquisaLista("usuario",usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula()));

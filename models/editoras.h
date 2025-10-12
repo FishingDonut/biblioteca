@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include <type_traits>
+using namespace std;
 
 #ifndef TAMANHO_HASH_EDITORA
 #define TAMANHO_HASH_EDITORA 7
@@ -13,7 +15,7 @@
 struct Editora
 {
     int matricula;
-    std::string nome;
+    string nome;
 };
 
 struct NoEditora {
@@ -43,7 +45,7 @@ struct ListaEditora {
     void mostrar() {
         NoEditora *auxiliar = inicio;
         while (auxiliar != nullptr) {
-            std::cout << " -> Matricula: " << auxiliar->valor.matricula << ", Nome: " << auxiliar->valor.nome;
+            cout << " -> Matricula: " << auxiliar->valor.matricula << ", Nome: " << auxiliar->valor.nome;
             auxiliar = auxiliar->proximo;
         }
     }
@@ -87,16 +89,16 @@ struct Editoras
 {
     ListaEditora tabela[TAMANHO_HASH_EDITORA];
 
-    int funcaoHash(std::string nome)
+    int funcaoHash(string nome)
     {
         int hash = 0;
         for (char c : nome) {
             hash = (hash * 31 + c);
         }
-        return std::abs(hash % TAMANHO_HASH_EDITORA);
+        return abs(hash % TAMANHO_HASH_EDITORA);
     }
 
-    Editora criar(std::string nome) {
+    Editora criar(string nome) {
         Editora novaEditora;
         novaEditora.nome = nome;
         novaEditora.matricula = rand() % 100000;
@@ -106,24 +108,27 @@ struct Editoras
         return novaEditora;
     }
 
-    void listar() {
-        std::cout << "\n===== LISTA DEEDITORAS =====\n";
+    bool listar() {
+        cout << "\n===== LISTA DEEDITORAS =====\n";
         for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
-            std::cout << "Indice [" << i << "]:";
+            cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
-            std::cout << std::endl;
+            cout << endl;
         }
-        std::cout << "===============================\n";
+        cout << "===============================\n";
+        return true;
     }
 
-    bool editar(int matricula, std::string novoNome) {
+    bool editar(int matricula, string novoNome) {
         for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
             NoEditora* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Editora editoraParaAtualizar = no->valor;
                 tabela[i].remover(matricula);
-
-                editoraParaAtualizar.nome = novoNome;
+                
+                if (!novoNome.empty()) {
+                    editoraParaAtualizar.nome = novoNome;
+                }
                 
                 int novoIndice = funcaoHash(editoraParaAtualizar.nome);
                 tabela[novoIndice].adicionar(editoraParaAtualizar);
@@ -131,6 +136,30 @@ struct Editoras
             }
         }
         return false;
+    }
+
+    template <typename T>
+    Editora pesquisar(string campo, T valor) {
+        for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
+            NoEditora* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) return aux->valor;
+                    }
+                } else if (campo == "nome") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.nome == valor) return aux->valor;
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+
+        // Se o loop terminar e nada for encontrado, retorna uma Editora "vazia"
+        Editora editoraNaoEncontrada;
+        editoraNaoEncontrada.matricula = -1;
+        return editoraNaoEncontrada;
     }
 };
 

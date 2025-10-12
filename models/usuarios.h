@@ -5,7 +5,9 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include <type_traits>
 #include "historicos.h"
+using namespace std;
 
 #ifndef TAMANHO_HASH_USUARIO
 #define TAMANHO_HASH_USUARIO 7
@@ -14,7 +16,8 @@
 struct Usuario
 {
     int matricula;
-    std::string nome;
+    int livro_alugado;
+    string nome;
     ListaHistorico historico;
 };
 
@@ -45,7 +48,7 @@ struct ListaUsuario {
     void mostrar() {
         NoUsuario *auxiliar = inicio;
         while (auxiliar != nullptr) {
-            std::cout << " -> Matricula: " << auxiliar->valor.matricula << ", Nome: " << auxiliar->valor.nome;
+            cout << " -> Matricula: " << auxiliar->valor.matricula << ", Nome: " << auxiliar->valor.nome;
             auxiliar = auxiliar->proximo;
         }
     }
@@ -89,16 +92,16 @@ struct Usuarios
 {
     ListaUsuario tabela[TAMANHO_HASH_USUARIO];
 
-    int funcaoHash(std::string nome)
+    int funcaoHash(string nome)
     {
         int hash = 0;
         for (char c : nome) {
             hash = (hash * 31 + c);
         }
-        return std::abs(hash % TAMANHO_HASH_USUARIO);
+        return abs(hash % TAMANHO_HASH_USUARIO);
     }
 
-    Usuario criar(std::string nome) {
+    Usuario criar(string nome) {
         Usuario novoUsuario;
         novoUsuario.nome = nome;
         novoUsuario.matricula = rand() % 100000;
@@ -108,24 +111,32 @@ struct Usuarios
         return novoUsuario;
     }
 
-    void listar() {
-        std::cout << "\n===== LISTA DE USUARIOS =====\n";
+    bool listar() {
+        cout << "\n===== LISTA DE USUARIOS =====\n";
         for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
-            std::cout << "Indice [" << i << "]:";
+            cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
-            std::cout << std::endl;
+            cout << endl;
         }
-        std::cout << "===============================\n";
+        cout << "===============================\n";
+
+        return true;
     }
 
-    bool editar(int matricula, std::string novo_nome) {
+    bool editar(int matricula, string novo_nome,int livro_alugado) {
         for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
             NoUsuario* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Usuario usuarioParaAtualizar = no->valor;
                 tabela[i].remover(matricula);
 
-                usuarioParaAtualizar.nome = novo_nome;
+                if (!novo_nome.empty()) {
+                    usuarioParaAtualizar.nome = novo_nome;
+                }
+
+                if (livro_alugado != 0) {
+                    usuarioParaAtualizar.livro_alugado = livro_alugado;
+                }
                 
                 int novoIndice = funcaoHash(usuarioParaAtualizar.nome);
                 tabela[novoIndice].adicionar(usuarioParaAtualizar);
@@ -133,6 +144,34 @@ struct Usuarios
             }
         }
         return false;
+    }
+
+    template <typename T>
+    Usuario pesquisar(string campo, T valor) {
+        for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
+            NoUsuario* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) return aux->valor;
+                    }
+                } else if (campo == "nome") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.nome == valor) return aux->valor;
+                    }
+                } else if (campo == "livro_alugado") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.livro_alugado == valor) return aux->valor;
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+
+        // Se o loop terminar e nada for encontrado, retorna um Usuario "vazio"
+        Usuario usuarioNaoEncontrado;
+        usuarioNaoEncontrado.matricula = -1;
+        return usuarioNaoEncontrado;
     }
 };
 

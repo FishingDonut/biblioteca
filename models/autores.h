@@ -5,15 +5,17 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include <type_traits>
 
 #ifndef TAMANHO_HASH_AUTOR
 #define TAMANHO_HASH_AUTOR 7
 #endif
+using namespace std;
 
 struct Autor
 {
     int matricula;
-    std::string nome;
+    string nome;
 };
 
 struct NoAutor {
@@ -43,7 +45,7 @@ struct ListaAutor {
     void mostrar() {
         NoAutor *auxiliar = inicio;
         while (auxiliar != nullptr) {
-            std::cout << " -> Matricula: " << auxiliar->valor.matricula << ", Nome: " << auxiliar->valor.nome;
+            cout << " -> Matricula: " << auxiliar->valor.matricula << ", Nome: " << auxiliar->valor.nome;
             auxiliar = auxiliar->proximo;
         }
     }
@@ -87,16 +89,16 @@ struct Autores
 {
     ListaAutor tabela[TAMANHO_HASH_AUTOR];
 
-    int funcaoHash(std::string nome)
+    int funcaoHash(string nome)
     {
         int hash = 0;
         for (char c : nome) {
             hash = (hash * 31 + c);
         }
-        return std::abs(hash % TAMANHO_HASH_AUTOR);
+        return abs(hash % TAMANHO_HASH_AUTOR);
     }
 
-    Autor criar(std::string nome) {
+    Autor criar(string nome) {
         Autor novoAutor;
         novoAutor.nome = nome;
         novoAutor.matricula = rand() % 100000;
@@ -106,31 +108,58 @@ struct Autores
         return novoAutor;
     }
 
-    void listar() {
-        std::cout << "\n===== LISTA DE AUTORES =====\n";
+    bool listar() {
+        cout << "\n===== LISTA DE AUTORES =====\n";
         for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
-            std::cout << "Indice [" << i << "]:";
+            cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
-            std::cout << std::endl;
+            cout << endl;
         }
-        std::cout << "==============================\n";
+        cout << "==============================\n";
+        return true;
     }
 
-    bool editar(int matricula, std::string novoNome) {
+    bool editar(int matricula, string novoNome) {
         for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
             NoAutor* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Autor autorParaAtualizar = no->valor;
                 tabela[i].remover(matricula);
 
-                autorParaAtualizar.nome = novoNome;
-                
+                if (!novoNome.empty()) {
+                    autorParaAtualizar.nome = novoNome;
+                }
+
                 int novoIndice = funcaoHash(autorParaAtualizar.nome);
                 tabela[novoIndice].adicionar(autorParaAtualizar);
                 return true;
             }
         }
         return false;
+    }
+
+    template <typename T>
+    Autor pesquisar(string campo, T valor) {
+        for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
+            NoAutor* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) return aux->valor;
+                    }
+                } else if (campo == "nome") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.nome == valor) return aux->valor;
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+
+        // Se o loop terminar e nada for encontrado, retorna um Autor "vazio"
+        Autor autorNaoEncontrado;
+        autorNaoEncontrado.matricula = -1;
+        return autorNaoEncontrado;
     }
 };
 

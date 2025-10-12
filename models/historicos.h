@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include <type_traits>
+using namespace std;
 
 #ifndef TAMANHO_HASH_HISTORICO
 #define TAMANHO_HASH_HISTORICO 7
@@ -16,7 +18,7 @@ struct Historico
     int livro;
     int usuario;
     bool alugado;
-    std::string data_alugel;
+    string data_alugel;
 };
 
 struct NoHistorico {
@@ -46,7 +48,7 @@ struct ListaHistorico {
     void mostrar() {
         NoHistorico *auxiliar = inicio;
         while (auxiliar != nullptr) {
-            std::cout << " -> Matricula: " << auxiliar->valor.matricula << ", Usuario: " << auxiliar->valor.usuario << ", Livro: " << auxiliar->valor.livro;
+            cout << " -> Matricula: " << auxiliar->valor.matricula << ", Usuario: " << auxiliar->valor.usuario << ", Livro: " << auxiliar->valor.livro;
             auxiliar = auxiliar->proximo;
         }
     }
@@ -92,10 +94,10 @@ struct Historicos
 
     int funcaoHash(int usuario)
     {
-        return std::abs(usuario % TAMANHO_HASH_HISTORICO);
+        return abs(usuario % TAMANHO_HASH_HISTORICO);
     }
 
-    Historico criar(int livro, int usuario, bool alugado, std::string data_alugel) {
+    Historico criar(int livro, int usuario, bool alugado, string data_alugel) {
         Historico novoHistorico;
         novoHistorico.livro = livro;
         novoHistorico.usuario = usuario;
@@ -108,34 +110,83 @@ struct Historicos
         return novoHistorico;
     }
 
-    void listar() {
-        std::cout << "\n===== LISTA DE HISTORICOS =====\n";
+    bool listar() {
+        cout << "\n===== LISTA DE HISTORICOS =====\n";
         for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
-            std::cout << "Indice [" << i << "]:";
+            cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
-            std::cout << std::endl;
+            cout << endl;
         }
-        std::cout << "=================================\n";
+        cout << "=================================\n";
+        return true;
     }
 
-    bool editar(int matricula, int novoLivro, int novoUsuario, bool novoAlugado, std::string novaData) {
+    bool editar(int matricula, int novoLivro, int novoUsuario, bool novoAlugado, string novaData) {
         for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
             NoHistorico* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Historico historicoParaAtualizar = no->valor;
                 tabela[i].remover(matricula);
-
-                historicoParaAtualizar.livro = novoLivro;
-                historicoParaAtualizar.usuario = novoUsuario;
-                historicoParaAtualizar.alugado = novoAlugado;
-                historicoParaAtualizar.data_alugel = novaData;
+                if (novoLivro != 0) {
+                    historicoParaAtualizar.livro = novoLivro;
+                }
                 
+                if (novoUsuario != 0) {
+                    historicoParaAtualizar.usuario = novoUsuario;
+                }
+
+                if (novoAlugado == 0) {
+                    historicoParaAtualizar.alugado = false;
+                } else if (novoAlugado == 1) {
+                    historicoParaAtualizar.alugado = true;
+                }
+
+                if (!novaData.empty()) {
+                    historicoParaAtualizar.data_alugel = novaData;
+                }
+
                 int novoIndice = funcaoHash(historicoParaAtualizar.usuario);
                 tabela[novoIndice].adicionar(historicoParaAtualizar);
                 return true;
             }
         }
         return false;
+    }
+
+    template <typename T>
+    Historico pesquisar(string campo, T valor) {
+        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+            NoHistorico* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) return aux->valor;
+                    }
+                } else if (campo == "livro") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.livro == valor) return aux->valor;
+                    }
+                } else if (campo == "usuario") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.usuario == valor) return aux->valor;
+                    }
+                } else if (campo == "alugado") {
+                    if constexpr (is_same_v<T, bool>) {
+                        if (aux->valor.alugado == valor) return aux->valor;
+                    }
+                } else if (campo == "data_alugel") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.data_alugel == valor) return aux->valor;
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+
+        // Se o loop terminar e nada for encontrado, retorna um Historico "vazio"
+        Historico historicoNaoEncontrado;
+        historicoNaoEncontrado.matricula = -1;
+        return historicoNaoEncontrado;
     }
 };
 

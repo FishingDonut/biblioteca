@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include <type_traits>
+using namespace std;
 
 #ifndef TAMANHO_HASH_REVISTA
 #define TAMANHO_HASH_REVISTA 7
@@ -14,10 +16,10 @@ struct Revista
 {
     int matricula;
     int editora;
-    std::string assunto;
-    std::string tipo;
+    string assunto;
+    string tipo;
     bool alugado;
-    std::string data_alugel;
+    string data_alugel;
 };
 
 struct NoRevista {
@@ -47,7 +49,7 @@ struct ListaRevista {
     void mostrar() {
         NoRevista *auxiliar = inicio;
         while (auxiliar != nullptr) {
-            std::cout << " -> Matricula: " << auxiliar->valor.matricula << ", Assunto: " << auxiliar->valor.assunto;
+            cout << " -> Matricula: " << auxiliar->valor.matricula << ", Assunto: " << auxiliar->valor.assunto;
             auxiliar = auxiliar->proximo;
         }
     }
@@ -91,16 +93,16 @@ struct Revistas
 {
     ListaRevista tabela[TAMANHO_HASH_REVISTA];
 
-    int funcaoHash(std::string assunto)
+    int funcaoHash(string assunto)
     {
         int hash = 0;
         for (char c : assunto) {
             hash = (hash * 31 + c);
         }
-        return std::abs(hash % TAMANHO_HASH_REVISTA);
+        return abs(hash % TAMANHO_HASH_REVISTA);
     }
 
-    Revista criar(int editora, std::string assunto, std::string tipo, bool alugado, std::string data_alugel) {
+    Revista criar(int editora, string assunto, string tipo, bool alugado, string data_alugel) {
         Revista novaRevista;
         novaRevista.editora = editora;
         novaRevista.assunto = assunto;
@@ -114,28 +116,41 @@ struct Revistas
         return novaRevista;
     }
 
-    void listar() {
-        std::cout << "\n===== LISTA DE REVISTAS =====\n";
+    bool listar() {
+        cout << "\n===== LISTA DE REVISTAS =====\n";
         for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
-            std::cout << "Indice [" << i << "]:";
+            cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
-            std::cout << std::endl;
+            cout << endl;
         }
-        std::cout << "=============================\n";
+        cout << "=============================\n";
+        return true;
     }
 
-    bool editar(int matricula, int novaEditora, std::string novoAssunto, std::string novoTipo, bool novoAlugado, std::string novaData) {
+    bool editar(int matricula, int novaEditora, string novoAssunto, string novoTipo, bool novoAlugado, string novaData) {
         for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
             NoRevista* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Revista revistaParaAtualizar = no->valor;
                 tabela[i].remover(matricula);
 
-                revistaParaAtualizar.editora = novaEditora;
-                revistaParaAtualizar.assunto = novoAssunto;
-                revistaParaAtualizar.tipo = novoTipo;
+                if (novaEditora != 0) {
+                    revistaParaAtualizar.editora = novaEditora;
+                }
+
+                if (!novoAssunto.empty()) {
+                    revistaParaAtualizar.assunto = novoAssunto;
+                }
+
+                if (novoAssunto.empty()) {
+                    revistaParaAtualizar.tipo = novoTipo;
+                }
+
                 revistaParaAtualizar.alugado = novoAlugado;
-                revistaParaAtualizar.data_alugel = novaData;
+
+                if (!novaData.empty()) {
+                    revistaParaAtualizar.data_alugel = novaData;
+                }
                 
                 int novoIndice = funcaoHash(revistaParaAtualizar.assunto);
                 tabela[novoIndice].adicionar(revistaParaAtualizar);
@@ -143,6 +158,46 @@ struct Revistas
             }
         }
         return false;
+    }
+
+    template <typename T>
+    Revista pesquisar(string campo, T valor) {
+        for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
+            NoRevista* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) return aux->valor;
+                    }
+                } else if (campo == "editora") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.editora == valor) return aux->valor;
+                    }
+                } else if (campo == "assunto") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.assunto == valor) return aux->valor;
+                    }
+                } else if (campo == "tipo") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.tipo == valor) return aux->valor;
+                    }
+                } else if (campo == "alugado") {
+                    if constexpr (is_same_v<T, bool>) {
+                        if (aux->valor.alugado == valor) return aux->valor;
+                    }
+                } else if (campo == "data_alugel") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.data_alugel == valor) return aux->valor;
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+
+        // Se o loop terminar e nada for encontrado, retorna uma Revista "vazia"
+        Revista revistaNaoEncontrada;
+        revistaNaoEncontrada.matricula = -1;
+        return revistaNaoEncontrada;
     }
 };
 
