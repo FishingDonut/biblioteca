@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <limits>
 using namespace std;
-#include "models/autores.h"
-#include "models/editoras.h"
-#include "models/livros.h"
-#include "models/usuarios.h"
+// #include "models/autores.h"
+// #include "models/editoras.h"
+// #include "models/livros.h"
+// #include "models/usuarios.h"
 
 string obterDataFormatada(int diasParaSubtrair = 0) {
     time_t tempoAtual = time(nullptr);
@@ -43,7 +44,7 @@ int ImprimeRetornaMatricula(string texto = "Digite o valor da matricula:"){
         if(maricula <= 0 || maricula > 99999){
             cout << "Valor digitado invalido para matricula, digite novamente \n";
         }
-    } while (maricula >= 0 && maricula <= 99999);
+    } while (maricula <= 0 || maricula > 99999);
     
     return maricula;
 }
@@ -120,6 +121,8 @@ bool libs(){
     string nome;
     int matricula;
     int matricula2;
+    int pesquisa;
+    int tipo;
 
     do{
         opcoesLib = ImprimeRetorna<int>("Selecione oque deseja gerenciar: \n 1 • Livros/Revistas \n 2 • Autores \n 3 • Editora \n 4 • Usuarios \n 5 • Voltar");
@@ -143,7 +146,7 @@ bool libs(){
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Autores*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Autor \n 3 • Editora \n 4 • Assunto \n 5 • Alugado");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Autor \n 3 • Editora \n 4 • Assunto \n 5 • Alugado");
                             switch (pesquisa){
                                 case 1:
                                     // livros.pesquisaLista("matricula",ImprimeRetornaMatricula());
@@ -172,7 +175,7 @@ bool libs(){
                             autor = ImprimeRetorna<string>(txtAutor);
                             editora = ImprimeRetorna<string>(txtEditora);
                             assunto = ImprimeRetorna<string>(txtAssunto);
-                            int tipo = ImprimeRetorna<int>(txtTipo);
+                            tipo = ImprimeRetorna<int>(txtTipo);
                             //livros.criar(autor,editora,assunto,tipo,editoras,autores);
                         break;
                         //Editar
@@ -181,7 +184,7 @@ bool libs(){
                             autor = ImprimeRetorna<string>(txtAutor);
                             editora = ImprimeRetorna<string>(txtEditora);
                             assunto = ImprimeRetorna<string>(txtAssunto);
-                            int tipo = ImprimeRetorna<int>(txtTipo);
+                            tipo = ImprimeRetorna<int>(txtTipo);
                             //livros.editar(matricula,autor,editora,assunto,tipo,editoras,autores);
                         break;
                         //Aluguel/Devolução
@@ -240,7 +243,7 @@ bool libs(){
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Autores*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
                             switch (pesquisa){
                                 case 1:
                                     // autores.pesquisaLista("matricula",ImprimeRetornaMatricula());
@@ -296,7 +299,7 @@ bool libs(){
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Autores*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
                             switch (pesquisa){
                                 case 1:
                                     // editoras.pesquisaLista("matricula",ImprimeRetornaMatricula());
@@ -351,7 +354,7 @@ bool libs(){
                         //Pesquisar
                         case 2:
                             /* Pesquisa de Usuarios*/
-                            int pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Livro alugado \n 3 • Nome");
+                            pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Livro alugado \n 3 • Nome");
                             switch (pesquisa){
                                 case 1:
                                     // usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula());
