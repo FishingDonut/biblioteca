@@ -1,38 +1,100 @@
-//deve conter uma lista hashing, com uma lista duplamente encadeada de livro
-//deve ter mais uma lista de revistas onde contem uma lista de livro
-//atributos:
-//int - matricula sera usado para determinar a posiçao dele na fila (nao no hashing)
-//int - autor (tera a matricula do autor)
-//int - editora (tera a matricula do autor)
-//string - assunto
-//string - tipo onde sera livro ou revista para diferenciarmos
-//bool - alugado (onde determinara se esta alugado ou nao)
-//string - data_alugel (dd/mm/YYYY) onde ira salvar quando foi alugado (livros so podem)
+#ifndef LIVROS_H
+#define LIVROS_H
 
+#include <string>
+#include <cmath>
+#include <iostream>
+#include <cstdlib>
 
-//em vez de retornar void ira retornar o No ou as informacoes do livro
-void pesquisa(int matricula){
+#ifndef TAMANHO_HASH_LIVRO
+#define TAMANHO_HASH_LIVRO 7
+#endif
 
-}
+struct Livro
+{
+    int matricula;
+    int autor;
+    int editora;
+    std::string assunto;
+    std::string tipo;
+    bool alugado;
+    std::string data_alugel;
+};
 
-//possiveis atributo (matricula, autor, editora, assunto, alugado)
-template <typename T> void pesquisaLista(string atributo, T valor){
+struct NoLivro {
+    Livro valor;
+    NoLivro* proximo;
+    NoLivro* anterior;
 
-}
+    explicit NoLivro(const Livro& val) : valor(val), proximo(nullptr), anterior(nullptr) {}
+};
 
-// lista todos os livros mostrando todos os atributos
-void listar(){
+struct ListaLivro {
+    NoLivro *inicio = nullptr;
+    NoLivro *fim = nullptr;
 
-}
+    void adicionar(Livro valor) {
+        NoLivro *novoNo = new NoLivro(valor);
+        if (inicio == nullptr) {
+            inicio = novoNo;
+            fim = novoNo;
+        } else {
+            fim->proximo = novoNo;
+            novoNo->anterior = fim;
+            fim = novoNo;
+        }
+    }
 
-// recebe os artributos como parametro e adiciona na lista, gera a matricula
-//recebera: autor(string, fazer a busca do autor),editora(string, fazer a busca da editora),assunto,tipo,alugado(bool),editoras(auxiliar para busca),autores(auxiliar para busca)
-// validar os campos que tem que fazer busca, caso nao achar imprimir uma mensagem de erro e retornar false
-bool criar(){
+    void mostrar() {
+        NoLivro *auxiliar = inicio;
+        while (auxiliar != nullptr) {
+            std::cout << " -> Matricula: " << auxiliar->valor.matricula << ", Assunto: " << auxiliar->valor.assunto;
+            auxiliar = auxiliar->proximo;
+        }
+    }
+};
 
-}
+struct Livros
+{
+    ListaLivro tabela[TAMANHO_HASH_LIVRO];
 
-// recebe a mtricula e os artributos como parametro busca o item e edita os dados
-//recebera: autor(string, fazer a busca do autor),editora(string, fazer a busca da editora),assunto,tipo,editoras(auxiliar para busca),autores(auxiliar para busca)
-//caso algum campo venha vazio e pq nao quer ser editado
-//
+    int funcaoHash(std::string assunto)
+    {
+        int hash = 0;
+        for (char c : assunto) {
+            hash = (hash * 31 + c);
+        }
+        return std::abs(hash % TAMANHO_HASH_LIVRO);
+    }
+
+    bool criar(int autor, int editora, std::string assunto, std::string tipo, bool alugado, std::string data_alugel) {
+        Livro novoLivro;
+        novoLivro.autor = autor;
+        novoLivro.editora = editora;
+        novoLivro.assunto = assunto;
+        novoLivro.tipo = tipo;
+        novoLivro.alugado = alugado;
+        novoLivro.data_alugel = data_alugel;
+        novoLivro.matricula = rand() % 100000;
+
+        int indice = funcaoHash(novoLivro.assunto);
+        tabela[indice].adicionar(novoLivro);
+        return true;
+    }
+
+    void listar() {
+        std::cout << "\n===== LISTA DE LIVROS =====\n";
+        for (int i = 0; i < TAMANHO_HASH_LIVRO; i++) {
+            std::cout << "Indice [" << i << "]:";
+            tabela[i].mostrar();
+            std::cout << std::endl;
+        }
+        std::cout << "=============================\n";
+    }
+
+    bool editar(int matricula, int autor, int editora, std::string assunto, std::string tipo, bool alugado, std::string data_alugel) {
+        return false;
+    }
+};
+
+#endif

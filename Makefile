@@ -1,8 +1,8 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11 -Istructs
+CXXFLAGS = -Wall -Wextra -std=c++11 -Iestruturas
 LDFLAGS =
 
-SOURCES = $(wildcard *.cpp)
+SOURCES = test.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = test
 
@@ -15,6 +15,6 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	del /f /q $(OBJECTS) $(EXECUTABLE)
 
 .PHONY: all clean

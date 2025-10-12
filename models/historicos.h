@@ -1,31 +1,92 @@
-//deve conter uma lista hashing, com uma lista duplamente encadeada de livro
-//deve ter mais uma lista de revistas onde contem uma lista de livro
-//atributos:
-//int - matricula sera usado para determinar a posiçao dele na fila (nao no hashing)
-//int - livro (tera a matricula do livro)
-//int - usuario (tera a matricula do usuario)
-//bool - alugado (onde determinara se foi alugado ou devolvido, true = alugado, false = devolvido)
-//string - data_alugel (dd/mm/YYYY) onde ira salvar quando foi alugado (livros so podem)
+#ifndef HISTORICOS_H
+#define HISTORICOS_H
 
+#include <string>
+#include <cmath>
+#include <iostream>
+#include <cstdlib>
 
-//em vez de retornar void ira retornar o No ou as informacoes do livro
-void pesquisa(int matricula){
+#ifndef TAMANHO_HASH_HISTORICO
+#define TAMANHO_HASH_HISTORICO 7
+#endif
 
-}
+struct Historico
+{
+    int matricula;
+    int livro;
+    int usuario;
+    bool alugado;
+    std::string data_alugel;
+};
 
-//possiveis atributo (livro, usuario)
-template <typename T> void pesquisaLista(string atributo, T valor){
+struct NoHistorico {
+    Historico valor;
+    NoHistorico* proximo;
+    NoHistorico* anterior;
 
-}
+    explicit NoHistorico(const Historico& val) : valor(val), proximo(nullptr), anterior(nullptr) {}
+};
 
-// lista todos os livros mostrando todos os atributos
-void listar(){
+struct ListaHistorico {
+    NoHistorico *inicio = nullptr;
+    NoHistorico *fim = nullptr;
 
-}
+    void adicionar(Historico valor) {
+        NoHistorico *novoNo = new NoHistorico(valor);
+        if (inicio == nullptr) {
+            inicio = novoNo;
+            fim = novoNo;
+        } else {
+            fim->proximo = novoNo;
+            novoNo->anterior = fim;
+            fim = novoNo;
+        }
+    }
 
-// recebe os artributos como parametro e adiciona na lista, gera a matricula
-//recebera: livro(int),usuario(int),alugado(bool),data_alugel(string)
-// validar os campos que tem que fazer busca, caso nao achar imprimir uma mensagem de erro e retornar false
-bool criar(){
+    void mostrar() {
+        NoHistorico *auxiliar = inicio;
+        while (auxiliar != nullptr) {
+            std::cout << " -> Matricula: " << auxiliar->valor.matricula << ", Usuario: " << auxiliar->valor.usuario << ", Livro: " << auxiliar->valor.livro;
+            auxiliar = auxiliar->proximo;
+        }
+    }
+};
 
-}
+struct Historicos
+{
+    ListaHistorico tabela[TAMANHO_HASH_HISTORICO];
+
+    int funcaoHash(int usuario)
+    {
+        return std::abs(usuario % TAMANHO_HASH_HISTORICO);
+    }
+
+    bool criar(int livro, int usuario, bool alugado, std::string data_alugel) {
+        Historico novoHistorico;
+        novoHistorico.livro = livro;
+        novoHistorico.usuario = usuario;
+        novoHistorico.alugado = alugado;
+        novoHistorico.data_alugel = data_alugel;
+        novoHistorico.matricula = rand() % 100000;
+
+        int indice = funcaoHash(novoHistorico.usuario);
+        tabela[indice].adicionar(novoHistorico);
+        return true;
+    }
+
+    void listar() {
+        std::cout << "\n===== LISTA DE HISTORICOS =====\n";
+        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+            std::cout << "Indice [" << i << "]:";
+            tabela[i].mostrar();
+            std::cout << std::endl;
+        }
+        std::cout << "=================================\n";
+    }
+
+    bool editar(int matricula, int livro, int usuario, bool alugado, std::string data_alugel) {
+        return false;
+    }
+};
+
+#endif

@@ -26,6 +26,10 @@ struct Lista
         }
     }
 
+    void editar(T valor){
+        
+    }
+
     bool buscar(T valor)
     {
         No<T> *auxiliar = inicio;
