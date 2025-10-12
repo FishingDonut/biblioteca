@@ -47,11 +47,11 @@ void testHistoricos() {
 void testLivros() {
     std::cout << "\n--- Testando Livros ---\n";
     Livros livros;
-    livros.criar(1, 1, "Fantasia", "Livro", false, "");
-    Livro livroParaEditar = livros.criar(2, 2, "Fantasia", "Livro", true, "10/10/2025");
+    livros.criar(1, 1, "Fantasia", 1, false, "");
+    Livro livroParaEditar = livros.criar(2, 2, "Fantasia", 1, true, "10/10/2025");
     livros.listar();
     std::cout << "\n--- Editando Livro ---\n";
-    livros.editar(livroParaEditar.matricula, 2, 2, "Sci-Fi", "Livro", false, "");
+    livros.editar(livroParaEditar.matricula, 2, 2, "Sci-Fi", 1, false, "");
     livros.listar();
 }
 
@@ -62,7 +62,7 @@ void testUsuarios() {
     Usuario usuarioParaEditar = usuarios.criar("Julina");
     usuarios.listar();
     std::cout << "\n--- Editando Usuario ---\n";
-    usuarios.editar(usuarioParaEditar.matricula, "Juliana");
+    usuarios.editar(usuarioParaEditar.matricula, "Juliana",0);
     usuarios.listar();
 }
 
