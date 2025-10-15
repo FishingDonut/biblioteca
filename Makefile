@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11 -Iestruturas
+CXXFLAGS = -Wall -Wextra -std=c++17 -Iestruturas
 LDFLAGS =
 
 SOURCES = test.cpp

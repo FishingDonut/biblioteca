@@ -188,6 +188,52 @@ struct Historicos
         historicoNaoEncontrado.matricula = -1;
         return historicoNaoEncontrado;
     }
+
+    template <typename T>
+    ListaHistorico pesquisaLista(string campo, T valor) {
+        ListaHistorico resultados;
+        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+            NoHistorico* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "livro") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.livro == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "usuario") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.usuario == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "alugado") {
+                    if constexpr (is_same_v<T, bool>) {
+                        if (aux->valor.alugado == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "data_alugel") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.data_alugel == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+        cout << "\n===== RESULTADO DA PESQUISA =====\n";
+        resultados.mostrar();
+        cout << "\n==============================\n";
+        return resultados;
+    }
 };
 
 #endif

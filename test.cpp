@@ -22,6 +22,15 @@ void testAutores() {
     autores.listar();
 }
 
+void testPesquisa() {
+    std::cout << "\n--- Pesquisando Autores por Nome ---\n";
+    Autores autores;
+    autores.criar("J.K. Rowling");
+    autores.criar("J.K. Rowling");
+    autores.listar();
+    autores.pesquisaLista("nome", std::string("J.K. Rowling"));
+}
+
 void testEditoras() {
     std::cout << "\n--- Testando Editoras ---\n";
     Editoras editoras;
@@ -77,15 +86,62 @@ void testRevistas() {
     revistas.listar();
 }
 
+void testPesquisaEditoras() {
+    std::cout << "\n--- Pesquisando Editoras por Nome ---\n";
+    Editoras editoras;
+    editoras.criar("Editora A");
+    editoras.criar("Editora A");
+    editoras.listar();
+    editoras.pesquisaLista("nome", std::string("Editora A"));
+}
+
+void testPesquisaHistoricos() {
+    std::cout << "\n--- Pesquisando Históricos por Usuario ---\n";
+    Historicos historicos;
+    historicos.criar(1, 101, true, "10/10/2025");
+    historicos.criar(2, 101, true, "11/10/2025");
+    historicos.listar();
+    historicos.pesquisaLista("usuario", 101);
+}
+
+void testPesquisaLivros() {
+    std::cout << "\n--- Pesquisando Livros por Assunto ---\n";
+    Livros livros;
+    livros.criar(1, 1, "Fantasia", 1, false, "");
+    livros.criar(2, 2, "Fantasia", 1, true, "10/10/2025");
+    livros.listar();
+    livros.pesquisaLista("assunto", std::string("Fantasia"));
+}
+
+void testPesquisaRevistas() {
+    std::cout << "\n--- Pesquisando Revistas por Assunto ---\n";
+    Revistas revistas;
+    revistas.criar(1, "Ciencia", "Revista", false, "");
+    revistas.criar(2, "Ciencia", "Revista", true, "10/10/2025");
+    revistas.listar();
+    revistas.pesquisaLista("assunto", std::string("Ciencia"));
+}
+
+void testPesquisaUsuarios() {
+    std::cout << "\n--- Pesquisando Usuários por Nome ---\n";
+    Usuarios usuarios;
+    usuarios.criar("Daniel");
+    usuarios.criar("marcos");
+    usuarios.criar("Mendonsa");
+    usuarios.criar("pedro");
+    usuarios.listar();
+    usuarios.pesquisaLista("nome", std::string("Jerson"));
+}
+
 int main() {
     srand(time(NULL));
 
-    testAutores();
-    testEditoras();
-    testHistoricos();
-    testLivros();
-    testUsuarios();
-    testRevistas();
+    testPesquisa();
+    testPesquisaEditoras();
+    testPesquisaHistoricos();
+    testPesquisaLivros();
+    testPesquisaRevistas();
+    testPesquisaUsuarios();
 
     return 0;
 }

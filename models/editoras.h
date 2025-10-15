@@ -161,6 +161,34 @@ struct Editoras
         editoraNaoEncontrada.matricula = -1;
         return editoraNaoEncontrada;
     }
+
+    template <typename T>
+    ListaEditora pesquisaLista(string campo, T valor) {
+        ListaEditora resultados;
+        for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
+            NoEditora* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "nome") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.nome == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+        cout << "\n===== RESULTADO DA PESQUISA =====\n";
+        resultados.mostrar();
+        cout << "\n==============================\n";
+        return resultados;
+    }
 };
 
 #endif

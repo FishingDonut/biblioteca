@@ -161,6 +161,34 @@ struct Autores
         autorNaoEncontrado.matricula = -1;
         return autorNaoEncontrado;
     }
+
+    template <typename T>
+    ListaAutor pesquisaLista(string campo, T valor) {
+        ListaAutor resultados;
+        for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
+            NoAutor* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "nome") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.nome == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+        cout << "\n===== RESULTADO DA PESQUISA =====\n";
+        resultados.mostrar();
+        cout << "\n==============================\n";
+        return resultados;
+    }
 };
 
 #endif

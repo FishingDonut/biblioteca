@@ -199,6 +199,58 @@ struct Revistas
         revistaNaoEncontrada.matricula = -1;
         return revistaNaoEncontrada;
     }
+
+    template <typename T>
+    ListaRevista pesquisaLista(string campo, T valor) {
+        ListaRevista resultados;
+        for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
+            NoRevista* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "editora") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.editora == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "assunto") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.assunto == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "tipo") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.tipo == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "alugado") {
+                    if constexpr (is_same_v<T, bool>) {
+                        if (aux->valor.alugado == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "data_alugel") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.data_alugel == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+        cout << "\n===== RESULTADO DA PESQUISA =====\n";
+        resultados.mostrar();
+        cout << "\n==============================\n";
+        return resultados;
+    }
 };
 
 #endif

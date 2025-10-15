@@ -173,6 +173,40 @@ struct Usuarios
         usuarioNaoEncontrado.matricula = -1;
         return usuarioNaoEncontrado;
     }
+
+    template <typename T>
+    ListaUsuario pesquisaLista(string campo, T valor) {
+        ListaUsuario resultados;
+        for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
+            NoUsuario* aux = tabela[i].inicio;
+            while (aux != nullptr) {
+                if (campo == "matricula") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.matricula == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "nome") {
+                    if constexpr (is_same_v<T, string>) {
+                        if (aux->valor.nome == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                } else if (campo == "livro_alugado") {
+                    if constexpr (is_same_v<T, int>) {
+                        if (aux->valor.livro_alugado == valor) {
+                            resultados.adicionar(aux->valor);
+                        }
+                    }
+                }
+                aux = aux->proximo;
+            }
+        }
+        cout << "\n===== RESULTADO DA PESQUISA =====\n";
+        resultados.mostrar();
+        cout << "\n==============================\n";
+        return resultados;
+    }
 };
 
 #endif
