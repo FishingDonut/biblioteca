@@ -8,8 +8,8 @@
 #include <type_traits>
 using namespace std;
 
-#ifndef TAMANHO_HASH_LIVRO
-#define TAMANHO_HASH_LIVRO 7
+#ifndef TAM
+#define TAM 7
 #endif
 
 struct Livro
@@ -92,7 +92,7 @@ struct ListaLivro {
 
 struct Livros
 {
-    ListaLivro tabela[TAMANHO_HASH_LIVRO];
+    ListaLivro tabela[TAM];
 
     int funcaoHash(string assunto)
     {
@@ -100,7 +100,7 @@ struct Livros
         for (char c : assunto) {
             hash = (hash * 31 + c);
         }
-        return abs(hash % TAMANHO_HASH_LIVRO);
+        return abs(hash % TAM);
     }
 
     Livro criar(int autor, int editora, string assunto, int tipo, bool alugado, string data_alugel) {
@@ -120,7 +120,7 @@ struct Livros
 
     bool listar() {
         cout << "\n===== LISTA DE LIVROS =====\n";
-        for (int i = 0; i < TAMANHO_HASH_LIVRO; i++) {
+        for (int i = 0; i < TAM; i++) {
             cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
             cout << endl;
@@ -130,7 +130,7 @@ struct Livros
     }
 
     bool editar(int matricula, int novoAutor, int novaEditora, string novoAssunto, int novoTipo, bool novoAlugado, string novaData) {
-        for (int i = 0; i < TAMANHO_HASH_LIVRO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoLivro* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Livro livroParaAtualizar = no->valor;
@@ -165,7 +165,7 @@ struct Livros
 
     template <typename T>
     Livro pesquisar(string campo, T valor) {
-        for (int i = 0; i < TAMANHO_HASH_LIVRO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoLivro* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {
@@ -206,7 +206,7 @@ struct Livros
     template <typename T>
     ListaLivro pesquisaLista(string campo, T valor) {
         ListaLivro resultados;
-        for (int i = 0; i < TAMANHO_HASH_LIVRO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoLivro* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {

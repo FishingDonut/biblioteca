@@ -8,8 +8,8 @@
 #include <type_traits>
 using namespace std;
 
-#ifndef TAMANHO_HASH_REVISTA
-#define TAMANHO_HASH_REVISTA 7
+#ifndef TAM
+#define TAM 7
 #endif
 
 struct Revista
@@ -91,7 +91,7 @@ struct ListaRevista {
 
 struct Revistas
 {
-    ListaRevista tabela[TAMANHO_HASH_REVISTA];
+    ListaRevista tabela[TAM];
 
     int funcaoHash(string assunto)
     {
@@ -99,7 +99,7 @@ struct Revistas
         for (char c : assunto) {
             hash = (hash * 31 + c);
         }
-        return abs(hash % TAMANHO_HASH_REVISTA);
+        return abs(hash % TAM);
     }
 
     Revista criar(int editora, string assunto, string tipo, bool alugado, string data_alugel) {
@@ -118,7 +118,7 @@ struct Revistas
 
     bool listar() {
         cout << "\n===== LISTA DE REVISTAS =====\n";
-        for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
+        for (int i = 0; i < TAM; i++) {
             cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
             cout << endl;
@@ -128,7 +128,7 @@ struct Revistas
     }
 
     bool editar(int matricula, int novaEditora, string novoAssunto, string novoTipo, bool novoAlugado, string novaData) {
-        for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoRevista* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Revista revistaParaAtualizar = no->valor;
@@ -162,7 +162,7 @@ struct Revistas
 
     template <typename T>
     Revista pesquisar(string campo, T valor) {
-        for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoRevista* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {
@@ -203,7 +203,7 @@ struct Revistas
     template <typename T>
     ListaRevista pesquisaLista(string campo, T valor) {
         ListaRevista resultados;
-        for (int i = 0; i < TAMANHO_HASH_REVISTA; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoRevista* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {

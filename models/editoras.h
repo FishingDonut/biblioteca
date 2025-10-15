@@ -8,8 +8,8 @@
 #include <type_traits>
 using namespace std;
 
-#ifndef TAMANHO_HASH_EDITORA
-#define TAMANHO_HASH_EDITORA 7
+#ifndef TAM
+#define TAM 7
 #endif
 
 struct Editora
@@ -87,7 +87,7 @@ struct ListaEditora {
 
 struct Editoras
 {
-    ListaEditora tabela[TAMANHO_HASH_EDITORA];
+    ListaEditora tabela[TAM];
 
     int funcaoHash(string nome)
     {
@@ -95,7 +95,7 @@ struct Editoras
         for (char c : nome) {
             hash = (hash * 31 + c);
         }
-        return abs(hash % TAMANHO_HASH_EDITORA);
+        return abs(hash % TAM);
     }
 
     Editora criar(string nome) {
@@ -110,7 +110,7 @@ struct Editoras
 
     bool listar() {
         cout << "\n===== LISTA DEEDITORAS =====\n";
-        for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
+        for (int i = 0; i < TAM; i++) {
             cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
             cout << endl;
@@ -120,7 +120,7 @@ struct Editoras
     }
 
     bool editar(int matricula, string novoNome) {
-        for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoEditora* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Editora editoraParaAtualizar = no->valor;
@@ -140,7 +140,7 @@ struct Editoras
 
     template <typename T>
     Editora pesquisar(string campo, T valor) {
-        for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoEditora* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {
@@ -165,7 +165,7 @@ struct Editoras
     template <typename T>
     ListaEditora pesquisaLista(string campo, T valor) {
         ListaEditora resultados;
-        for (int i = 0; i < TAMANHO_HASH_EDITORA; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoEditora* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {

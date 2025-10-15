@@ -110,12 +110,6 @@ bool libs(){
     Autor autor;
     Historico historico;
 
-    // usuarios.inicializar();
-    // livros.inicializar();
-    // editoras.inicializar();
-    // autores.inicializar();
-    // historicos.inicializar();
-
     string txtAutor = "Informe o nome do autor:";
     string txtEditora = "Informe o nome da editora:";
     string txtAssunto = "Informe o assunto:";
@@ -155,19 +149,19 @@ bool libs(){
                             pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Autor \n 3 • Editora \n 4 • Assunto \n 5 • Alugado");
                             switch (pesquisa){
                                 case 1:
-                                    // livros.pesquisaLista("matricula",ImprimeRetornaMatricula());
+                                    livros.pesquisaLista("matricula",ImprimeRetornaMatricula());
                                 break;
                                 case 2:
-                                    // livros.pesquisaLista("autor",ImprimeRetorna<string>("Digite o autor:"));
+                                    livros.pesquisaLista("autor",ImprimeRetorna<string>("Digite o autor:"));
                                 break;
                                 case 3:
-                                    // livros.pesquisaLista("editora",ImprimeRetorna<string>("Digite a editora:"));
+                                    livros.pesquisaLista("editora",ImprimeRetorna<string>("Digite a editora:"));
                                 break;
                                 case 4:
-                                    // livros.pesquisaLista("assunto",ImprimeRetorna<string>("Digite o assunto:"));
+                                    livros.pesquisaLista("assunto",ImprimeRetorna<string>("Digite o assunto:"));
                                 break;
                                 default:
-                                    // livros.pesquisaLista("alugado",true);
+                                    livros.pesquisaLista("alugado",true);
                                 break;
                             }
                             cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
@@ -209,7 +203,7 @@ bool libs(){
                             }
                         break;
                         case 6:
-                            // historicos.pesquisaLista("livro",livros.pesquisaLista("matricula",ImprimeRetornaMatricula()));
+                            historicos.pesquisaLista("livro",livros.pesquisar("matricula",ImprimeRetornaMatricula()));
                             cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
                             cin.ignore();
                             cout<< cin.get();
@@ -250,10 +244,10 @@ bool libs(){
                             pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
                             switch (pesquisa){
                                 case 1:
-                                    // autores.pesquisaLista("matricula",ImprimeRetornaMatricula());
+                                    autores.pesquisaLista("matricula",ImprimeRetornaMatricula());
                                 break;
                                 default:
-                                    // autores.pesquisaLista("nome",ImprimeRetorna<string>("Digite o nome do autor:"));
+                                    autores.pesquisaLista("nome",ImprimeRetorna<string>("Digite o nome do autor:"));
                                 break;
                             }
 
@@ -306,10 +300,10 @@ bool libs(){
                             pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Nome \n");
                             switch (pesquisa){
                                 case 1:
-                                    // editoras.pesquisaLista("matricula",ImprimeRetornaMatricula());
+                                    editoras.pesquisaLista("matricula",ImprimeRetornaMatricula());
                                 break;
                                 default:
-                                    // editoras.pesquisaLista("nome",ImprimeRetorna<string>("Digite o nome do autor:"));
+                                    editoras.pesquisaLista("nome",ImprimeRetorna<string>("Digite o nome do autor:"));
                                 break;
                             }
                             cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
@@ -361,13 +355,13 @@ bool libs(){
                             pesquisa = ImprimeRetorna<int>("Deseja pesquisar por: \n 1 • Matricula \n 2 • Livro alugado \n 3 • Nome");
                             switch (pesquisa){
                                 case 1:
-                                    // usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula());
+                                    usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula());
                                 break;
                                 case 2:
-                                    // usuarios.pesquisaLista("livro_alugado",ImprimeRetornaMatricula("Digite a matricula do livro alugado que deseja pesquisar: "));
+                                    usuarios.pesquisaLista("livro_alugado",ImprimeRetornaMatricula("Digite a matricula do livro alugado que deseja pesquisar: "));
                                 break;
                                 default:
-                                    // usuarios.pesquisaLista("nome",ImprimeRetorna<string>("Digite o nome:"));
+                                    usuarios.pesquisaLista("nome",ImprimeRetorna<string>("Digite o nome:"));
                                 break;
                             }
                             cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
@@ -403,7 +397,7 @@ bool libs(){
                             }
                         break;
                         case 6:
-                            // historicos.pesquisaLista("usuario",usuarios.pesquisaLista("matricula",ImprimeRetornaMatricula()));
+                            historicos.pesquisaLista("usuario",usuarios.pesquisar("matricula",ImprimeRetornaMatricula()));
                             cout << "Você ira retornar para o menu de interagir, precisone qualquer tecla para prosseguir:\n";
                             cin.ignore();
                             cout<< cin.get();

@@ -14,30 +14,6 @@ int main() {
     srand(time(NULL)); // Inicializa o gerador de números aleatórios
     int opcoes = 0;
 
-
-
-
-//  Cadastro de livros e revistas, com possiblidade de alteração (não precisa remover);
-//  Cada livro pode ter apenas um autor;
-//  Pesquisar qualquer item armazenado por matrícula, título, autor, editora ou
-// assunto;
-//  Deve haver um cadastro de autores (dos livros) e editoras (livros e revistas), com
-// a possibilidade de incluir e alterar;
-//  Deve haver um cadastro de usuário que podem retirar livros para devolução após
-// 7 dias;
-//  Listagens necessárias (relatórios em tela):
-// o Livros/Revistas de um autor ou editora
-// o Livros/Revistas de um assunto
-// o Livros/Revistas em atraso de devolução
-// o Histórico de retiradas de um usuário 
-
-
-
-
-
-
-
-
     do{
         cout << "\033c";
         opcoes = ImprimeRetorna<int>("Selecione uma das opções a seguir: \n 1 • Iniciar ▷\n 2 • Sobre ⁉️ \n 3 • Fim 𝕏\n");

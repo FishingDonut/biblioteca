@@ -7,8 +7,8 @@
 #include <cstdlib>
 #include <type_traits>
 
-#ifndef TAMANHO_HASH_AUTOR
-#define TAMANHO_HASH_AUTOR 7
+#ifndef TAM
+#define TAM 7
 #endif
 using namespace std;
 
@@ -87,7 +87,7 @@ struct ListaAutor {
 
 struct Autores
 {
-    ListaAutor tabela[TAMANHO_HASH_AUTOR];
+    ListaAutor tabela[TAM];
 
     int funcaoHash(string nome)
     {
@@ -95,7 +95,7 @@ struct Autores
         for (char c : nome) {
             hash = (hash * 31 + c);
         }
-        return abs(hash % TAMANHO_HASH_AUTOR);
+        return abs(hash % TAM);
     }
 
     Autor criar(string nome) {
@@ -110,7 +110,7 @@ struct Autores
 
     bool listar() {
         cout << "\n===== LISTA DE AUTORES =====\n";
-        for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
+        for (int i = 0; i < TAM; i++) {
             cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
             cout << endl;
@@ -120,7 +120,7 @@ struct Autores
     }
 
     bool editar(int matricula, string novoNome) {
-        for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoAutor* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Autor autorParaAtualizar = no->valor;
@@ -140,7 +140,7 @@ struct Autores
 
     template <typename T>
     Autor pesquisar(string campo, T valor) {
-        for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoAutor* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {
@@ -165,7 +165,7 @@ struct Autores
     template <typename T>
     ListaAutor pesquisaLista(string campo, T valor) {
         ListaAutor resultados;
-        for (int i = 0; i < TAMANHO_HASH_AUTOR; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoAutor* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {

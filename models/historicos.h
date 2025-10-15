@@ -8,8 +8,8 @@
 #include <type_traits>
 using namespace std;
 
-#ifndef TAMANHO_HASH_HISTORICO
-#define TAMANHO_HASH_HISTORICO 7
+#ifndef TAM
+#define TAM 7
 #endif
 
 struct Historico
@@ -90,11 +90,11 @@ struct ListaHistorico {
 
 struct Historicos
 {
-    ListaHistorico tabela[TAMANHO_HASH_HISTORICO];
+    ListaHistorico tabela[TAM];
 
     int funcaoHash(int usuario)
     {
-        return abs(usuario % TAMANHO_HASH_HISTORICO);
+        return abs(usuario % TAM);
     }
 
     Historico criar(int livro, int usuario, bool alugado, string data_alugel) {
@@ -112,7 +112,7 @@ struct Historicos
 
     bool listar() {
         cout << "\n===== LISTA DE HISTORICOS =====\n";
-        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+        for (int i = 0; i < TAM; i++) {
             cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
             cout << endl;
@@ -122,7 +122,7 @@ struct Historicos
     }
 
     bool editar(int matricula, int novoLivro, int novoUsuario, bool novoAlugado, string novaData) {
-        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoHistorico* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Historico historicoParaAtualizar = no->valor;
@@ -155,7 +155,7 @@ struct Historicos
 
     template <typename T>
     Historico pesquisar(string campo, T valor) {
-        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoHistorico* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {
@@ -192,7 +192,7 @@ struct Historicos
     template <typename T>
     ListaHistorico pesquisaLista(string campo, T valor) {
         ListaHistorico resultados;
-        for (int i = 0; i < TAMANHO_HASH_HISTORICO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoHistorico* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {

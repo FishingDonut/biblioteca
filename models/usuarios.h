@@ -9,8 +9,8 @@
 #include "historicos.h"
 using namespace std;
 
-#ifndef TAMANHO_HASH_USUARIO
-#define TAMANHO_HASH_USUARIO 7
+#ifndef TAM
+#define TAM 7
 #endif
 
 struct Usuario
@@ -90,7 +90,7 @@ struct ListaUsuario {
 
 struct Usuarios
 {
-    ListaUsuario tabela[TAMANHO_HASH_USUARIO];
+    ListaUsuario tabela[TAM];
 
     int funcaoHash(string nome)
     {
@@ -98,7 +98,7 @@ struct Usuarios
         for (char c : nome) {
             hash = (hash * 31 + c);
         }
-        return abs(hash % TAMANHO_HASH_USUARIO);
+        return abs(hash % TAM);
     }
 
     Usuario criar(string nome) {
@@ -113,7 +113,7 @@ struct Usuarios
 
     bool listar() {
         cout << "\n===== LISTA DE USUARIOS =====\n";
-        for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
+        for (int i = 0; i < TAM; i++) {
             cout << "Indice [" << i << "]:";
             tabela[i].mostrar();
             cout << endl;
@@ -124,7 +124,7 @@ struct Usuarios
     }
 
     bool editar(int matricula, string novo_nome,int livro_alugado) {
-        for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoUsuario* no = tabela[i].buscar(matricula);
             if (no != nullptr) {
                 Usuario usuarioParaAtualizar = no->valor;
@@ -148,7 +148,7 @@ struct Usuarios
 
     template <typename T>
     Usuario pesquisar(string campo, T valor) {
-        for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoUsuario* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {
@@ -177,7 +177,7 @@ struct Usuarios
     template <typename T>
     ListaUsuario pesquisaLista(string campo, T valor) {
         ListaUsuario resultados;
-        for (int i = 0; i < TAMANHO_HASH_USUARIO; i++) {
+        for (int i = 0; i < TAM; i++) {
             NoUsuario* aux = tabela[i].inicio;
             while (aux != nullptr) {
                 if (campo == "matricula") {
